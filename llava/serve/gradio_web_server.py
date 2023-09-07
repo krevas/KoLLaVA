@@ -288,16 +288,16 @@ def http_bot(state, model_selector, temperature, top_p, max_new_tokens, request:
         fout.write(json.dumps(data) + "\n")
 
 title_markdown = ("""
-# 🌋 LLaVA: Large Language and Vision Assistant
-[[Project Page]](https://llava-vl.github.io) [[Paper]](https://arxiv.org/abs/2304.08485) [[Code]](https://github.com/haotian-liu/LLaVA) [[Model]](https://huggingface.co/liuhaotian/LLaVA-13b-delta-v0)
+# 🌋 LDCC-LLaVA-LLaMA-2: Large Language and Vision Assistant
+[[Model]](https://huggingface.co/LDCC/LDCC-LLaVA-Llama-2-ko-7B)
 """)
 
 tos_markdown = ("""
 ### Terms of use
-By using this service, users are required to agree to the following terms:
-The service is a research preview intended for non-commercial use only. It only provides limited safety measures and may generate offensive content. It must not be used for any illegal, harmful, violent, racist, or sexual purposes. The service may collect user dialogue data for future research.
-Please click the "Flag" button if you get any inappropriate answer! We will collect those to keep improving our moderator.
-For an optimal experience, please use desktop computers for this demo, as mobile devices may compromise its quality.
+이 서비스를 이용하려면 사용자는 다음 약관에 동의해야 합니다\n
+본 서비스는 향후 연구를 위해 사용자 대화 데이터를 수집할 수 있습니다.
+부적절한 답변이 있으면 '신고' 버튼을 클릭해 주세요! 해당 정보를 수집하여 모델을 지속적으로 개선할 것입니다.
+모바일 기기에서는 품질이 저하될 수 있으므로 최적의 환경을 위해 데스크톱 환경을 사용해 주시기 바랍니다.
 """)
 
 
@@ -309,7 +309,7 @@ The service is a research preview intended for non-commercial use only, subject 
 
 def build_demo(embed_mode):
     textbox = gr.Textbox(show_label=False, placeholder="Enter text and press ENTER", visible=False, container=False)
-    with gr.Blocks(title="LLaVA", theme=gr.themes.Base()) as demo:
+    with gr.Blocks(title="LDCC-LLaVA", theme=gr.themes.Base()) as demo:
         state = gr.State()
 
         if not embed_mode:
@@ -333,13 +333,13 @@ def build_demo(embed_mode):
 
                 cur_dir = os.path.dirname(os.path.abspath(__file__))
                 gr.Examples(examples=[
-                    [f"{cur_dir}/examples/extreme_ironing.jpg", "What is unusual about this image?"],
-                    [f"{cur_dir}/examples/waterview.jpg", "What are the things I should be cautious about when I visit here?"],
+                    [f"{cur_dir}/examples/extreme_ironing.jpg", "사진에 대해서 설명해줘"],
+                    [f"{cur_dir}/examples/waterview.jpg", "이곳을 방문할 때 주의해야 할 사항은 무엇인가요?"],
                 ], inputs=[imagebox, textbox])
 
                 with gr.Accordion("Parameters", open=False, visible=False) as parameter_row:
-                    temperature = gr.Slider(minimum=0.0, maximum=1.0, value=0.2, step=0.1, interactive=True, label="Temperature",)
-                    top_p = gr.Slider(minimum=0.0, maximum=1.0, value=0.7, step=0.1, interactive=True, label="Top P",)
+                    temperature = gr.Slider(minimum=0.0, maximum=1.0, value=0.4, step=0.1, interactive=True, label="Temperature",)
+                    top_p = gr.Slider(minimum=0.0, maximum=1.0, value=0.6, step=0.1, interactive=True, label="Top P",)
                     max_output_tokens = gr.Slider(minimum=0, maximum=1024, value=512, step=64, interactive=True, label="Max output tokens",)
 
             with gr.Column(scale=6):
@@ -350,16 +350,16 @@ def build_demo(embed_mode):
                     with gr.Column(scale=1, min_width=60):
                         submit_btn = gr.Button(value="Submit", visible=False)
                 with gr.Row(visible=False) as button_row:
-                    upvote_btn = gr.Button(value="👍  Upvote", interactive=False)
-                    downvote_btn = gr.Button(value="👎  Downvote", interactive=False)
-                    flag_btn = gr.Button(value="⚠️  Flag", interactive=False)
+                    upvote_btn = gr.Button(value="👍  좋아요", interactive=False)
+                    downvote_btn = gr.Button(value="👎  싫어요", interactive=False)
+                    flag_btn = gr.Button(value="⚠️  신고", interactive=False)
                     #stop_btn = gr.Button(value="⏹️  Stop Generation", interactive=False)
-                    regenerate_btn = gr.Button(value="🔄  Regenerate", interactive=False)
+                    regenerate_btn = gr.Button(value="🔄  재작성", interactive=False)
                     clear_btn = gr.Button(value="🗑️  Clear history", interactive=False)
 
         if not embed_mode:
             gr.Markdown(tos_markdown)
-            gr.Markdown(learn_more_markdown)
+            # gr.Markdown(learn_more_markdown)
         url_params = gr.JSON(visible=False)
 
         # Register listeners

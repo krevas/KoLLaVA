@@ -2,6 +2,6 @@ data/
 __pycache__/
 nohup.out
 nohup.out*
-*.log
+*.log*
 *-conv.json
 serve_images/
